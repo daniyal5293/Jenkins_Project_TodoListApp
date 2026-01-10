@@ -12,16 +12,24 @@ pipeline {
 
         stage('Install Dependencies') {
             agent {
-                docker { image 'node:16-alpine' }
+                docker {
+                    image 'node:18-alpine'
+                    args '-u root'
+                       }
             }
             steps {
+                sh 'node --version'
+                sh 'npm --version'
                 sh 'npm install'
             }
         }
 
         stage('Build') {
             agent {
-                docker { image 'node:16-alpine' }
+                docker {
+                    image 'node:18-alpine'
+                    args '-u root'
+                       }
             }
             steps {
                 sh 'npm run build'
