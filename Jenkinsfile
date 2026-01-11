@@ -1,13 +1,15 @@
 pipeline {
     agent none
 
-        stages {
+    stages {
+
         stage('Clean Workspace') {
             agent any
             steps {
                 cleanWs()
-           }
+            }
         }
+
         stage('Checkout') {
             agent any
             steps {
@@ -20,12 +22,15 @@ pipeline {
                 docker {
                     image 'node:18-alpine'
                     args '-u root'
-                       }
+                }
             }
             steps {
-                sh 'node --version'
-                sh 'npm --version'
-                sh 'npm install'
+                sh '''
+                    node --version
+                    npm --version
+                    npm config set progress=false
+                    npm ci --no-progress
+                '''
             }
         }
 
@@ -34,7 +39,7 @@ pipeline {
                 docker {
                     image 'node:18-alpine'
                     args '-u root'
-                       }
+                }
             }
             steps {
                 sh 'npm run build'
